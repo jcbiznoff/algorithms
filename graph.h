@@ -1,15 +1,25 @@
 #include <stdlib.h>
-#define VMAX 100
-typedef struct _edgenode{
+#define MAXV 100
+
+typedef struct{
     int y;
-    struct _edgenode *next;
+    int weight;
+    struct edgenode *next;
 }edgenode;
 
-typedef struct _graph{
+
+typedef struct{
     int nvertex;
     int nedge;
-    int ndeg[VMAX];
-    edgenode *edge[VMAX];
     int isDirected;
+    int degree[MAXV];
+    edgenode * edge[MAXV];
 }graph;
 
+typedef struct{
+    int q[MAXV];
+    int start;
+    int end;
+}queue
+
+void bfs(graph *g, int start);

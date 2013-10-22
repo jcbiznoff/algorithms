@@ -9,6 +9,21 @@ void printarray(int *a, int len){
     }
     printf("}\n");
 }
+
+void bubblesortt(char **a, int len){
+    char *tmp;
+    int i, j =0;
+    for (i=1; i< len; i++){
+        for (j=1; j<= len-i; j++){
+            if( strcmp(a[j-1] ,a[j])>0 ){
+                tmp=a[j];
+                a[j]=a[j-1];
+                a[j-1]=tmp;
+            }
+        }
+    }
+    printarray(a,len);
+}
 void selectionSort(int *a, int len){
     int min, tmp;
     int i,j;
@@ -34,7 +49,6 @@ void insertionSort(int *a, int len){
             tmp = a[j];
             a[j] = a[j-1];
             a[j-1] = tmp;
-
             j--;
         }
     }
@@ -113,8 +127,58 @@ void quicksortt(int *a, int l, int h){
         quicksortt(a,p+1,h);
     }
 }
-
 void quicksortexec(int *a, int l, int  h){
     quicksortt(a,l,h);
     printarray(a,h);
+}
+
+void mergeme(int *a, int start, int mid, int end){
+    int l = start;
+    int r = mid + 1;
+    int destidx =0;
+    int *tmpa = (int*)malloc(sizeof(int)* (end-start+1));
+
+    while( (l <= mid) && (r <= end)){
+        if (a[l] <= a[r]){
+            tmpa[destidx] = a[l++];
+        }
+        else{
+            tmpa[destidx] = a[r++];
+        }
+        destidx++;
+    }
+    while (l<=mid){
+        tmpa[destidx++] = a[l++];
+    }
+    while (r<=end){
+        tmpa[destidx++] = a[r++];
+    }
+    destidx=0;
+    for (int i=start; i<=end; i++)
+        a[i] = tmpa[destidx++];
+    free(tmpa);
+}
+void mergesortt(int *a, int start, int end){
+    int mid;
+    if (start < end){
+        mid = (start + end) / 2;
+        mergesortt(a, start, mid);
+        mergesortt(a, mid+1, end);
+        mergeme(a, start,mid,end);
+    }
+}
+
+void mergesortexec (int *a, int len){
+    mergesortt(a, 0, len-1);
+    printArray(a,len);
+}
+void heapsortexec(int *a, int len){
+    /*
+        pq q;
+    initjpq(&q);
+    for (int i=0; i< len; i++)
+        insertpq(&q, a[i]);
+
+    heapsortt(&q);
+    */
 }
