@@ -1,0 +1,191 @@
+1.Software Design overview: 이란? What/ How
+
+Business Modeling -> Requirements -> analysis/Design -> implementation -> testing -> deploymet
+
+analysis: what to do (30~ 40%)
+	design: how to do
+		Architecutral - major parts, relationship
+		Detailed - sub system, dependency 
+	Design mistakes
+		depth first design
+		refining requirements specification
+		fail to consider potential changes
+		making design too detailed
+		ambiguously stated
+		undocumented design decisions
+		inconsistent design
+	Good design
+		low coupling
+		high cohesion
+
+
+2.Structured Analysis and Design
+	SASD - sw 구조 고려 
+		divide and conquer
+		필요 기능 나누는 분석/설계
+		잘동작하는 function
+		재사용가능한 library/framework
+		library 사용 가능하도록 api documentation
+		분석/설계/구현/테스트의 적절한 process
+
+	SASD = Environmental model + behvior model
+	
+	Environmental model: 	context diagram, event list, statement of purpose
+	Behavioral model: 		DFD (Dataflowdiagram) DD (datadictionary) STD (statement transition digram)
+
+	SA: top down(process decomposition), black box, data flow 처리 process
+		functional decomposition approach: divde and conquer, functional approach
+		data object 
+	
+	SA procedure:
+		Waterfall model: 분석 > 설계 > 구현 > 검증
+		
+		SA: target software 구조적 분석
+			requriement 이용하여 환경/기능/동작 분석
+			SRS, Data/Environemnt 분석 자료
+		
+		software Environment analysis: target software 주변 환경, system/hardware/actor 부석 ,  data 정의
+									   Tools) System Context Diagram, Event Table
+									   System context diagram: 구현할 system scope 와 동작 환경 대한 정보 표현 
+		software Function analysis: 	기능에 대한 명시적 분석
+										Tools) Data Flow Diagram, Control Flow Diagram, Process Spcification/Control specification (PSPEC/CSPEC)
+
+										DFD
+											DFD 활용한 process decomp 는 SA에서 가장 중요한 단계
+											Bubble chart
+											DFD level 0, 1, 2 (DFD level 0 = system context diagram)
+											data 정합성 유지가 중요, function으로 구현 가능한 size까지 세분화 작업 지속
+											process를 function level 까지 작성 하기위해서는 많은 단계 필요, process number 중요 to keep track (4 -> 4.1, 4.2 -> 4.2.1, 4.2.2) 
+											Control flow, control process, data flow, data process , data store, terminator
+											*) data process: must have both in and outs
+											*) All flows to or from a data stroe must move through a process
+											* ) No data moves directly between external entities without going through a process
+											DFD는 Data와 이를 처리하기위한 process가 중심
+											Balancing: conversion of inputs and outputs to a DFD process when that process is decomposed to lower levels
+
+		software Behavior analysis:		동작 분석, function 내부 동작 분석, function 조합 등 
+										Tools) State Transition diagrams, state trasition table
+		software information analysis :	Tools) Data Dictionary (DD)
+			STD
+				외부 event에 대해서 System 반응 동작 표현 
+				pros: Event 에 반응과 다음 상태 표현 2) 알고리즘 모호함 제거
+				cons: 시간 흐름 없음. timing이 중요 한경우 seq diagram is better
+			DD 
+				software에서 사용되는 모든 종류의 데이터에 대한 명세 기록
+
+	SD procedure:
+		topdown:큰그림->상세 function 설계
+		architecture: 기능 배분, 빠진 기능 검증 
+		상위 설계: module relationship 설계 
+		하위 설계: 상세 설계, 내부 알고리즘 기술 
+
+		Software Architecutral Design: Data centered acrhitectres, dataflow, call and return, remote procedure call, layered architecture
+		Software High Level Design: structure chart, task
+		Software Low Level Design: flow chart, pseudo code, box diagram
+		Software interface Design: structure chart, interface table
+
+
+3.UML
+4.Use case modeling
+	Requirement engineering의 한 형태
+	steps:
+		1. system boundary 도출
+		2. actor 도출
+		3. use case 도출
+			key alternative flows 도출
+		4. use case, actors, system boundary가 stable 할때 까지 반복
+	System Boundary (Subject): 시스템의 경계를 결정 해야함 
+	Actors: 시스템과 직접 상호 작용하는 외부 entity (사용자, 다른 system, 하드웨어)
+	use case: 
+		sequences of actions, interacting with outside actors
+		specification:
+			펴준이 존재 하지 않음 
+			content: use case name (UpperCamelCase), id (uniqueID), description(goal을 요약해서 기술), actors(primary - trigger/secondary -triger이후 상호 ), preconditions (usecase 실행전 system 상태), main flow(primary scenario기재. error/deviation/interrupst/branch 제외), post conditions(use case 종류후 system 상태), alt. flows(secondary scenarios)
+		requirement tracing 
+			use case model이 requirement 를 빠짐없이 반영하는지 check
+			tools(requistePro, DOORS)
+		relationship 종류
+			association: actor 와 usecase 간의 communication path
+			extend: 기존 use case에 새로운 behavior 추가 (exception use case handling) , single/multiple insertion segment,  conditional extension
+			include :하나의 use case에서 다른 use case의 behavior 추가 
+			generalization: general 한 use case 와 specific 한 use case의 관계 표현
+
+
+5. Architectual Design
+	balance among Structure  Function  Aestehtics
+	elements(구성 요소) + property (외부에 드러내는 속성 ) + relationship(관계)
+	Definition: 프로그램 주요 부분들에 대한 1) 책임, 2) 속성 3) 인터페이스 4) 관계 5) 상호작용 에 대해 기술하는 것
+	...
+	
+6. software detailed design
+
+
+
+SW Test
+Statement Coverage: 모든 statement 를 한번이상 실행 
+					Node coverage, code coverage, line coverage
+					한계: boolean expression 100% 검출 못함
+Decision Coverage: 각 조건문의 true, false를 적어도 한번 이상 실행 
+					statement coverage 기준 포함 
+					branch coverage, edge coverage
+Condition coverage: 조건문 내의 각 boolean expression 의 true/false가 한번이상 실행 
+					statemen coverage를 포함 해야함 
+
+condition/decision coveraage
+
+multiple condition coverage : boolean expression 간 mask현상 해결하기 위해 각조건 내 존재하는 논리연산자를 고려, 모든 조합 실행 
+
+path coverage: 모든 경로를 만족하는 가장 강력한 기준 
+coverage criteria selection:
+	code 유형, 신뢰성, requirements 선택 가능한 기준에따라 사용
+	tool 사용 가능 
+	level of coverage vs. test path selection criteria
+
+
+control flow test
+	def: 프로그램의 control flow를 graph로 표현, graph 상 논리적인 분기들의 path를 test
+	action group, structural test
+	unit test, integration test 에서 사용
+	control structure를 flow graph notation으로 표현
+	sequence, if, while, until, case
+
+basic path test
+	program의 control sturcutr를 순환 복잡도를 활용하여 flow graph notation으로 표현한 test 방법 .
+	순환 복잡도cyclomatic complexity: program의 논리적 복잡도 측정(linearly independent path), test 횟수의 상한, 10이하로 권장
+
+test depth level
+
+equivalence partitioning
+	equivalence class testing
+	system under test (SUT)
+	weak equivalence class testing
+	strong equivalence class testing
+
+boundary value analysis
+	standard boundary value analysis:#of test case: 4n+1
+	robustness testing:#of test cases 6n+1
+
+orthogonal array
+
+
+
+SW일반 
+sw: 프로그램, 문서, 설치 의미
+	특성: 비가시성,복잡성, 비마모성, 복제 가능, 테스트/변경 가능, 비 제조성, 순응성 
+	"제품 향상을위해 소프트웨어 품질에 대한 관심 필요"
+
+sw engineering 정의: 시스템명세화 -> 유지보수 까지 생산의 모든 관점을 다루는 학문
+				목표: 고품질 + 생산성
+
+품질속성:
+저품질: 사용자 요구 충족 시키지 못함 
+품질3요소: people, process, tech
+
+
+기능 요구사항: use case 에서 포착, interaction diagram, state charts, 
+				프로그램 모듈 별로 trace 가능
+
+비기능 요구사항: 개발비용, 운영비용,이식성, 사용성, 안정성
+
+이해당사자(stakeholders), 관리자, 요구사항 엔지니어, 시스템 엔지니어, 시스템 아키텍처 
+
