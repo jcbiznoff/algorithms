@@ -1,6 +1,10 @@
 #include <stdio.h>
-#include "sorttest.h"
+#include <stdlib.h>
 #include <string.h>
+
+#include "queue.c"
+#include "sorttest.h"
+
 void printarray(int *a, int len){
     int i;
     printf("{");
@@ -22,7 +26,7 @@ void bubblesortt(char **a, int len){
             }
         }
     }
-    printarray(a,len);
+    //printarray(a,len);
 }
 void selectionSort(int *a, int len){
     int min, tmp;
@@ -132,13 +136,14 @@ void quicksortexec(int *a, int l, int  h){
     printarray(a,h);
 }
 
-void mergeme(int *a, int start, int mid, int end){
-    int l = start;
-    int r = mid + 1;
+void mergeme(int *a, int s, int m, int e){
+    int i;
+    int l = s;
+    int r = m + 1;
     int destidx =0;
-    int *tmpa = (int*)malloc(sizeof(int)* (end-start+1));
+    int *tmpa = (int*)malloc(sizeof(int)* (e-s+1));
 
-    while( (l <= mid) && (r <= end)){
+    while( (l <= m) && (r <= e)){
         if (a[l] <= a[r]){
             tmpa[destidx] = a[l++];
         }
@@ -147,16 +152,39 @@ void mergeme(int *a, int start, int mid, int end){
         }
         destidx++;
     }
-    while (l<=mid){
+    while (l<=m){
         tmpa[destidx++] = a[l++];
     }
-    while (r<=end){
+    while (r<=e){
         tmpa[destidx++] = a[r++];
     }
     destidx=0;
-    for (int i=start; i<=end; i++)
+    for (i=s; i<=e; i++)
         a[i] = tmpa[destidx++];
     free(tmpa);
+}
+void mergemeq(int *a, int s, int m, int e){
+    int i;
+    queue buffer1, buffer2;
+
+    initq(&buffer1);
+    initq(&buffer2);
+
+    for (i=s;i<=m;i++)enqueue(&buffer1, a[i]);
+    for (i=m+1; i<=e; i++)enqueue(&buffer2, a[i]);
+
+    i=s;
+    while (!isEmpty(&buffer1) && !isEmpty(&buffer2)){
+        if(headq(&buffer1) > headq(&buffer2))
+            a[i++] = dequeue(&buffer2);
+        else
+            a[i++] = dequeue(&buffer1);
+    }
+
+    while (!isEmpty(&buffer1)) a[i++] = dequeue(&buffer1);
+    while (!isEmpty(&buffer2)) a[i++] = dequeue(&buffer2);
+
+
 }
 void mergesortt(int *a, int start, int end){
     int mid;
@@ -164,21 +192,41 @@ void mergesortt(int *a, int start, int end){
         mid = (start + end) / 2;
         mergesortt(a, start, mid);
         mergesortt(a, mid+1, end);
-        mergeme(a, start,mid,end);
+        mergemeq(a, start,mid,end);
     }
 }
 
 void mergesortexec (int *a, int len){
     mergesortt(a, 0, len-1);
-    printArray(a,len);
+    printarray(a,len);
 }
 void heapsortexec(int *a, int len){
     /*
         pq q;
-    initjpq(&q);
+    initpq(&q);
     for (int i=0; i< len; i++)
         insertpq(&q, a[i]);
 
     heapsortt(&q);
     */
+}
+
+void countingsort(int *a, int len){
+    int i,maxa=0;
+    int c[100];
+    int b[100];
+    for (i=0;i<len; i++) if (a[i]>maxa) maxa =a[i];
+    for (i=0;i<=maxa; i++) {
+        c[i] = 0;
+        b[i] = 0;
+    }
+    for (i=0;i<len; i++) c[a[i]]++;
+    for (i=1; i<=maxa; i++) c[i] += c[i-1];
+
+    for (i=len-1; i>=0 ; i--){
+        b[c[a[i]]-1] = a[i];
+        c[a[i]]--;
+    }
+
+    printarray(b, len);
 }

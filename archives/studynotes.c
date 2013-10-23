@@ -1,4 +1,4 @@
-*//study notes:
+//study notes:
 
 //1. bubble sort:
 void bubblesort(int dataarr[], int arrlen){
@@ -20,12 +20,12 @@ void insertionsort(int dataarr[], int arrlen){
 	int key;
 	for(i=1; i<arrlen; i++){
 		if(dataarr[i-1] > dataarr[i]){
-			key = dataarr[i-1]; // can use dataarr[i] instead of dataarr[i-1]? 
+			key = dataarr[i-1]; // can use dataarr[i] instead of dataarr[i-1]?
 			for(j=0;j<i;j++){
 				if(dataarr[j] > key){
 					memmove(&dataarr[j+1], &dataarr[j], sizof(dataarr[0]) * (i-j));
 					dataarr[j] = key;
-					break;					
+					break;
 				}
 			}
 		}
@@ -101,14 +101,14 @@ void merge(int dataset[], int start, int middle, int end){
 	int right = middle +1;
 	int destidx = 0;
 	int i;
-	int * dest = (int *)malloc(sizeof(int)* (end-start +1)); // this stays the same. 
+	int * dest = (int *)malloc(sizeof(int)* (end-start +1)); // this stays the same.
 
 	while (left <= middle && right <= end){ // comparison operator has higher priority than &&
 		if (dataset[left] < dataset[right]){
-			dest[destidx] = dataset[left]; //misake: not sure 
+			dest[destidx] = dataset[left]; //misake: not sure
 			left++;
 		}else{
-			dest[destidx] = dataset[right];//misake: not sure 
+			dest[destidx] = dataset[right];//misake: not sure
 			right++;
 		}
 		destidx++;
@@ -230,9 +230,9 @@ for(i=0;i<5;i++){
 		dataarr[i][j] = (int*)malloc(sizeof(int)*4); //careful: last malloc stores int
 		//dataarr[i][j] = (int*)calloc(4,sizeof(int));
 	}
-		
+
 }
-	
+
 
 //shuffle
 void shuffle(int **arr, int n){
@@ -295,7 +295,7 @@ if((tepm = (int*)malloc(sizeof(int))) )== -1 ) return;
 6. < <= >= >
 7. == !=
 8. &
-9. ^	
+9. ^
 10. |
 11. &&
 12. ||

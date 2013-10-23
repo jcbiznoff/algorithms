@@ -38,8 +38,14 @@ int main(){
     printf("insertion sort 2 result: ");
     insertionSort2(a,MAXN);
 
-    printf("quick sort  result: ");
-    quicksortexec(a,0,MAXN);
+//    printf("quick sort  result: ");
+//   quicksortexec(a,0,MAXN);
+//
+    printf("counting sort result: ");
+    countingsort(a, MAXN);
 
+    printf("merge sort result: ");
+    mergesortexec(a, MAXN);
     return 0;
 }
+
