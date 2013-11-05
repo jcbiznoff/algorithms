@@ -23,14 +23,16 @@ int getArrLen(char *line){
         len++;
         p = strtok(NULL," ");
     }
+    printf("len: %d",len);
     return len;
 }
 
 void parseStr2Arr(char *line){
-    int i =0;
+    int i =0,j;
     char *p = strtok(line, " ");
     while(p!=NULL){
         arr[i] = atoi(p);
+        printf("[%d : %d] ", j, arr[j]);
         i++;
         p = strtok(NULL, " ");
     }
@@ -60,7 +62,8 @@ void detJ(int max){
 int main(){
     int k,len;
 
-    while(fgets(line,MAXBIN*3000,stdin)){
+    while(fgets(line,MAXBIN*3000,stdin)!= NULL){
+        initBin();
         len = getArrLen(line);
         parseStr2Arr(line);
         k = fillBin(len);
