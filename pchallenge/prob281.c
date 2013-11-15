@@ -5,7 +5,7 @@
 #define MAXBIN 3000
 
 int bin[MAXBIN];
-char line[MAXBIN*3000];
+char line[MAXBIN*4];
 int arr[MAXBIN];
 
 void initBin(){
@@ -63,6 +63,8 @@ int main(){
     int k,len;
 
     while(fgets(line,MAXBIN*3000,stdin)!= NULL){
+        if(line[strlen(line) -1 ] == '\n')
+            line[strlen(line) - 1] = '\0';
         initBin();
         len = getArrLen(line);
         parseStr2Arr(line);
