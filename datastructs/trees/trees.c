@@ -14,14 +14,6 @@ node * build123(){
     a->right = newNode(3);
     return a;
 }
-/*
- * builds the following
- *           2
- *          / \
- *         1   4
- *            /
- *           3
- * */
 node * build1234(){
     node *a = newNode(2);
     a->left = newNode(1);
@@ -36,7 +28,7 @@ node *buildComplex(){
     a->left->right = newNode(3);
     a->left->right->left = newNode(2);
     a->right->right = newNode(10);
-    a->right->right->left = newNode(7);
+    a->right->left = newNode(7);
     a->right->right->right = newNode(12);
 }
 void print123(node *a){
@@ -61,6 +53,17 @@ void insertNodeBST(node *nd, int x){
     else
         insertNodeBST(nd->right,x);
 }
+node* searchNodeBST(node *nd, int x){
+    if(nd == NULL) return NULL;
+
+    if(nd->data == x) return nd;
+
+    else if (nd->data > x)
+        return searchNodeBST(nd->right, x);
+    else
+        return searchNodeBST(nd->left, x);
+
+}
 void printInorderTraverse(node * nd){
     if(nd == NULL) return;
     printInorderTraverse(nd->left);
@@ -81,16 +84,46 @@ void printPreorderTraverse(node *nd){
 }
 void printLevelorderTraverse(node *nd){
     int i=0;
-    for(i=0; i<getHeight(nd);i++){
+    for(i=1; i<=getHeight(nd);i++){
         printLevelHelper(nd,i);
     }
 }
 void printLevelHelper(node *nd, int height){
     if (nd == NULL) return;
     if(height == 1) printf("%d ", nd->data);//leaf case
-
     printLevelHelper(nd->left, height-1);
     printLevelHelper(nd->right, height -1);
+}
+void printSpiralLevelorder(node *nd){
+    int i;
+    int dir=0;
+
+    for(i=1; i<=getHeight(nd); i++){
+        printSpiralHelper(nd, i, dir);
+        dir= !dir;
+    }
+}
+void printSpiralHelper(node *nd, int lvl, int dir){
+    if(nd == NULL) return;
+    if(lvl == 1) printf("%d ", nd->data);
+
+    if(dir == 0){
+        printSpiralHelper(nd->left, lvl-1, dir);
+        printSpiralHelper(nd->right,lvl-1, dir);
+    }
+    else{
+        printSpiralHelper(nd->right, lvl-1, dir);
+        printSpiralHelper(nd->left,lvl-1, dir);
+    }
+}
+void printReverseLevelTraverse(node *nd){
+    int i;
+    for(i=getHeight(nd) ; i>0; i--){
+        printLevelHelper(nd, i);
+    }
+}
+void printNodesOneLevel(node *nd, int lvl){
+    printLevelHelper(nd,lvl);
 }
 int getHeight(node * nd){
     int a = 0;
@@ -103,6 +136,18 @@ int getHeight(node * nd){
 
     if(a>b) return a+1;
     return b+1;
+}
+int getNodeLvl(node *nd, int k, int lvl){
+    if (nd == NULL) return 0;
+
+    if(nd->data == k) return lvl;
+
+    int dlev = getNodeLvl(nd->left, k, lvl+1);
+
+    if(dlev) return dlev;
+
+    dlev = getNodeLvl(nd->right, k, lvl +1);
+    return dlev;
 }
 int getNodeNum(node *nd){
     if(nd == NULL) return 0;
@@ -128,8 +173,6 @@ int hasPathSum(node *nd, int sum){
     return hasPathSum(nd->left, sum) || //recursive case
            hasPathSum(nd->right,sum);
 }
-/* doubleTree: duplictes each node and attach to left
- * */
 void doubleTree(node *nd){
     if(nd == NULL) return;
     doubleTree(nd->left);
@@ -139,9 +182,6 @@ void doubleTree(node *nd){
     nd->left = newNode(nd->data);
     nd->left->left = tmp;
 }
-/*mirrorTree : "swaps" each left and right nodes of a tree
- *
- */
 void mirrorTree(node *nd){
     if(nd==NULL) return;
 
@@ -151,14 +191,6 @@ void mirrorTree(node *nd){
     nd->right = nd->left;
     nd->left= tmp;
 }
-/* countPossibleTrees(int n):
- * all possible formation of a BST with a given number of nodes
- *  bstn = catalan # = (2n)! / (n+1)!n!
- *
- *  this implementation relies on a recursive formulation for the above
- *  b(n) = sum(b(i-1)*b(n-i)) where i=1 to n
- *
- * */
 int countPossibleTrees(int n){
     if(n == 0 || n ==1) return 1;
 
@@ -209,10 +241,15 @@ int isBST1(node *nd){
     return 1;
 }
 int isBST2(node *nd){}
+
+//util funcitons below
 void printArray(int arr[], int len){
     int i;
     for(i=0; i<len; i++){
         printf("%d ", arr[i]);
     }
     printf("\n");
+}
+int max(int a, int b){
+    return (a>b)? a : b;
 }
