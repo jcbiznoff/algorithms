@@ -1,13 +1,12 @@
 #ifndef C_BINARYTREE_H
 #define C_BINARYTREE_H
-//base structure
+//tree's node struct
 typedef struct _node{
     struct _node *left;
     struct _node *right;
     int data;
 }node;
 
-//Tree base operations
 /*newNode:
  *  creates a newNode in heap with data. Returns pointer to this node.
  */
@@ -115,6 +114,9 @@ void printReverseLevelTraverse(node *nd); //needs verification
 
 /*printBoundaryTraverse:
  *  prints the boundary of a binary tree root counter clock wise
+ *  => print left : root to leaf-1
+ *  => print leaves: left to right
+ *  => print right: leaf-1 to root
  */
 void printBoundaryTraverse(node *nd);// to do
 
@@ -130,7 +132,16 @@ void printNodesOneLevel(node *nd, int lvl);// to do
 int getHeight(node*nd);
 
 /*getHeightIter:
- *  gets height in iterative version
+ *  gets height in iterative version using queue ds, like level order traversal
+ *  1. init queue and push root
+ *  2. loop
+ *  3. if not empty, increase height by 1
+ *  4. else return;
+ *  5. while not empty
+ *      pop front
+ *      push children to queue
+ *      decrease node count
+ *  6. go to 2
  */
 int getHeightIter(node *n);// to do
 
@@ -178,13 +189,22 @@ int sumAllPathVals(node *nd);
 /*getDiameter:
  *  diameter of a tree = length of the longest path between two nodes
  *      max of 1)height of left + height of right + 1, 2) diameter of left subtree, 3) diameter of right subtree
+ *  1. Base: if nd is null return 0
+ *  2. Leaf: should return 1, but take into account @ recursion
+ *  3. Recur: return max of getHeight(left sub)+getHeight (right sub)+1, getDiameter(leftsub), getDiameter(rightsub)
  */
 int getDiameter(node *nd);//to do
+
 /*getTreeMaxWidth:
  *  width = number of nodes in a single level
  *  max width = longest width in a tree
+ *
+ *  1.base: if nd is null return 0;
+ *  2.leaf: same as base
+ *  3. recur:
  */
 int getTreeMaxWidth(node *nd);//to do
+
 /*isFoldable:
  *  foldable: left and right subtrees are mirror images
  */
@@ -198,23 +218,27 @@ void printAncestor(node *nd, int k);// to do
 
 /*printGivenRangeBST:
  *  given a lower bound and a upper bound, print a range of values in BST
+ *
  */
 void printGivenRangeBST(node *nd, int n1, int n2); //to do
 
 /*isBSTSumTree:
  *  sum tree: node data is sum of all sub nodes
+ *      => do a preorder traversal of all nodes
+ *  1. Base: if node null then return 1
+ *  2. Leaf: if node left and right  does not exist return 1
+ *  3. check each leaf
+ *  4. check condition, recur down both left and right, return with and operation
  */
 int isBSTSumTree(node* nd);
 
 /*isSubTree:
  *  check if one tree is contained with another
+ *  1. base: if node 1 and 2 are both null return true
+ *  2. false case: if node 1 or node 2 either null return false
+ *  3. recur: && data, l subtree, right subtree
  */
 int isSubTree(node *nd1, node *nd2);
-
-/*largestBST:
- *  find largest BST in a Binary Tree
- */
-int largestBST(node *nd);
 
 /*printVerticalSum:
  *  vertical sum: tree divided into vertical cells, find sum of node data in each cell
@@ -252,20 +276,21 @@ void buildTreePreandPost(node *nd);
  */
 int getCeil(node *nd, int k);
 
-/*sumExist:
- *  ?
+/*removeNodesInRange:
+ *  remove all nodes with data less than min and greater than max.
+ *
  */
-int sumExists(node *, int sum);
-
 void removeNodesInRange(node *nd, int min, int max);
 
 int isIsomorphic(node *n1, node *n2);
+
 /*removeNodesSumLessThanK:
  * removes all nodes for path sum greatear than given k
  */
 void removeNodesSumLessthanK(node *n1, int sum);
 
 int getDeepestLeftNode(node *n1);
+
 /*:findNextRightNode:
  *  given node with value k, return data to the right on the same lvl
  */
@@ -317,11 +342,67 @@ int doesNodeExist(node *nd, int x);
 int countPossibleTrees(int numberm);
 
 //conversions
+/*convert2SumTree:
+ *  sum tree: every node is a sum of two children node
+ *      => diff = node->data - sum(child1, child2)
+ *  1. base: nd == NULL => return
+ *  2. leaf: return
+ *  3. post ordr recur
+ *  4. diff: diff<0 =>  add diff to node->data
+ *  5.      diff>0 => increment left child by diff
+ *
+ * incrementSumTree:
+ *  0. if left node exists
+ *  1. increment left child by diff
+ *  2. recur down left
+ *  3. if right node exists
+ *  4. increase node->right
+ *  5. recur down right
+ *
+ */
 void convert2SumTree(node *nd1);
+
+/*convert2sumtree2:
+ *  1. base: node is null return 0
+ *  2. store current val
+ *  3. update current val = sum of subtree left, subtree right
+ *  4. return curval + old val;
+ */
+int convert2Sumtree2(node *nd1);
+
+
 void toBSTtoBin(node *); //add all nodes greater than current to val
+
+/*binTree2BST:
+ *  convert a binary tree to BST:
+ *  => do an inorder traversal, saving each element to an array
+ *  => perform sorting on the array
+ *  => copy sorted array to each element while doing inorder traversal again.
+ */
 int binTree2BST(node*nd);
+
+/*addGreaterValNodesInBST:
+ *  prop: sum all nodes in the right, which is always greater than current
+ *  1. recur right
+ *  2. sum = sum + node->data;
+ *  3. update node->data;
+ *  2. recur left subtree with sum
+ */
+void addGreaterValNodesInBST(node *);
+
 void linklist2BinTree(node*); //convert a link list to bin tree
+
+/*binTree2DoubleLinkList:
+ *  convert a binary tree to double link list with head as left most tree
+ *  1. If left sub tree exists, process left
+ *  2. convert left sub tree to DLL, recursivly
+ *  3. find inorder prdecessor of root in left subtree ( right most node in the left sub tree)
+ *  4. make in order predeccessor as previous  of root and root as next of inorder predecessor
+ *  5. If right sub tree exists, process right do similar as above
+ *  6. find left most node and return it.
+ */
 void binTree2DoubleLinkList(node *);
+void binTree2CircularDLL(node *)
 
 
 //Two trees
@@ -330,10 +411,91 @@ int areTreesIdentical(node *nd1, node *nd2);
 //BST only
 int getMinValBST(node *nd);
 int getMaxValBST(node *nd);
+
 int isBST1(node * nd);
 int isBST2(node *nd);
 int isHeightBalancedBST(node *nd);// to do
 int getKthSmallets(node *nd, int k);// to do
+
+//other ds combined:
+//preorder to BST
+/*preorder2BST:
+ *  given a list of array build a BST
+ *  1. set first element as root
+ *  2. find index i, greater than the root. set this as right
+ *  3. recurse elements l to i
+ *  4. recurse elements i+1 to h
+ */
+ void preorder2BST(node *);
+ void preorder2BSTHelper(node *, int arr[], int* cur, int start, int end, int size);
+
+ /*preorder2BSTStack:
+  * read an array, save it into stack, return node
+  * 1. init root node with arr[0] and push to stack
+  * 2. iterate thtrough size
+  * 3. pop stack until empty and while next value is greater than top
+  * 4. make current node's right to data, push on top.
+  * 5. if next value small, make current nodes left to data, push on top
+  * 6. return root.
+  */
+node * preorder2BSTStack(int arr[], int size);
+
+//inorder traversal no recursion
+/*printInorderWithStack:
+ *  1. initialize cur node as root
+ *  2. push cur node and cur=cur->left until cur is null
+ *  3. if cur is null and stack not empty
+ *      1) pop from top
+ *      2) print popped item and cur=cur->right
+ *      3) go to step2
+ *  4. if cur is null and stack empty then done
+ */
+void printInorderWithStack(node * nd);
+
+/*printInorderMoris:
+ * inorder traversal no recursion, no stack
+ * 1. initi cur as root
+ * 2. while cur is not null
+ * 3. if cur->left is null
+ * 4. print cur data, and cur=vur->right
+ * 5. else
+ * 6. make cur->right as right most node is currents left sub tree
+ * 7. cur=cur->left
+ */
+void printInorderMorris(node *nd);
+
+/*mergeBSTs:
+ *  merge two binary trees
+ *  => sol1: insert each elements of bst1 to bst2
+ *  => sol2: 1) inorder traversal of each, save to array, 2) merge two arrays 3) create a new bst from this array
+ *  => sol3: in place merge using DLL: 1) convert each BST to DLL 2) merge two DLLS 3) Build BST from list
+ */
+node * mergeBSTs(node *n1, node *n2);
+
+
+/*mergeBSTNoSpace: extremely difficult
+ */
+node * mergeBSTNoSpace(node* n1, node* n2);
+
+// difficult here:
+//
+/*inorderSuccssorBST:
+ *  finds the next biggest node in a BST
+ *
+ *  */
+node * inOrderSuccessorBST(node *nd, node *n)
+
+node * sortedArray2BST(int arr[],int left, int right);
+
+/*largestBST:
+ *  find largest BST in a Binary Tree
+ */
+int largestBST(node *nd);
+
+//struct with next*
+connectsNodeSameLevel(node *);
+connectsNodeSameLevelNoSpace(node*);
+populateInorderSuccessor(node *);
 
 //Array Helper funcitons
 void printArray(int arr[], int len);
