@@ -14,7 +14,6 @@ void modstr2(char (*str1)[]){
     mystr[0]= 'M';
 }
 void cpystr(char *str1, char *str2){
-
     while(*str2 != 0){
         *str1++ = *str2++;
     }

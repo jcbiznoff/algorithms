@@ -46,10 +46,31 @@ void parseWords2arr(char** arr,int rows, char*txt){
             l = r+1;
             k++;
         }
-
     }
-
 }
+/*countUniqueWords:
+ *  counts number of each unique words.
+ *  1. find total number of words
+ *  2. use O(n^2) search to find if matched.
+ *  3. if matched,
+ *      increase unqcount
+ *      replace target string to blank
+ */
+int countUniqueWords(char * str, char **arr){
+    int totwords = getWordCount(str);
+    int dupcount = 0;
+    int i,j;
+    for(i=0; i<totwords; i++){
+        for(j=0; j<totwords; j++){
+            if(strcmp(arr[i],arr[j])){
+                dupcount++;
+                arr[j] = 0;
+            }
+        }
+    }
+    return totwords - dupcount;
+}
+
 int comparestr(const void * str1, const void* str2){
     //const char * a = (const char *)str1;
     //const char * b = (const char *)str2;
