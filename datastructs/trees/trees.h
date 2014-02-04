@@ -48,7 +48,53 @@ node* buildComplex();
  *          / \
  *         1   3
  */
-void print123();
+void print123(node *a);
+
+/*buildLLTree:
+ *          10
+ *         /  \
+ *        4   15
+ *       / \
+ *      2   8
+ *     / \
+ *    1  3
+ */
+node* buildLLTree();
+
+
+/*buildRRTree:
+ *  10
+ *  / \
+ * 2  20
+ *   / \
+ *  15  24
+ *      / \
+ *     22  100
+ */
+node * buildRRTree();
+
+/*buildLRTree:
+ *      10
+ *     /  \
+ *    5   20
+ *   / \
+ *  3   8
+ *     /  \
+ *    6    9
+ */
+node *buildLRTree();
+
+/*buildRLTree
+ *    10
+ *    / \
+ *   5   20
+ *       / \
+ *      15  30
+ *     / \
+ *    12  18
+ *
+ */
+node *buildRLTree();
 
 //Dictionary Operation
 /*deleteAllNodes:
@@ -66,8 +112,21 @@ void insertNodeBST(node *nd, int x);
  */
 node *searchNodeBST(node *nd, int k);
 
+/*deleteNodeBST:
+ */
+node* deleteNodeBST(node *nd, int k);
+
+node *getSuccessor(node *nd);
+
+/*searchNode:
+ *  search a tree with node value k
+ */
+node *searchNode(node *nd, int k);
+
 /*deleteNode:
  *  delete a single node with value x.
+ *  this sounds impossible. probably need some structure on how to handle deletes
+ *
  */
 void deleteNode(node *nd, int x);
 
@@ -402,7 +461,7 @@ void linklist2BinTree(node*); //convert a link list to bin tree
  *  6. find left most node and return it.
  */
 void binTree2DoubleLinkList(node *);
-void binTree2CircularDLL(node *)
+void binTree3CircularDLL(node *);
 
 
 //Two trees
@@ -483,7 +542,7 @@ node * mergeBSTNoSpace(node* n1, node* n2);
  *  finds the next biggest node in a BST
  *
  *  */
-node * inOrderSuccessorBST(node *nd, node *n)
+node * inOrderSuccessorBST(node *nd, node *n);
 
 node * sortedArray2BST(int arr[],int left, int right);
 

@@ -71,4 +71,4 @@ int findMinimumInSortedRotated(int arr[], int l, int h);
  *
  *  for given set of nodes
  */
-void printPermutatioi(int arr[]);
+void printPermutation(int arr[]);

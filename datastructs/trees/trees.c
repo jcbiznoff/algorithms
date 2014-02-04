@@ -21,6 +21,46 @@ node * build1234(){
     a->right->left = newNode(3);
     return a;
 }
+node *buildLLTree(){
+    node *a = newNode(10);
+    a->left = newNode(4);
+    a->right = newNode(15);
+    a->left->left = newNode(2);
+    a->left->right = newNode(8);
+    a->left->left->left = newNode(1);
+    a->left->left->right = newNode(3);
+    return a;
+}
+node * buildRRTree(){
+    node * a = newNode(10);
+    a->left = newNode(2);
+    a->right = newNode(20);
+    a->right->left = newNode(15);
+    a->right->right = newNode(24);
+    a->right->right->left = newNode(22);
+    a->right->right->right = newNode(100);
+    return a;
+}
+node * buildLRTree(){
+    node *a = newNode(10);
+    a->left = newNode(5);
+    a->right = newNode(20);
+    a->left->left = newNode(3);
+    a->left->right = newNode(8);
+    a->left->right->left = newNode(6);
+    a->left->right->right = newNode(9);
+    return a;
+}
+node *buildRLTree(){
+    node *a = newNode(10);
+    a->left = newNode(5);
+    a->right =newNode(20);
+    a->right->right = newNode(30);
+    a->right->left = newNode(15);
+    a->right->left->left = newNode(12);
+    a->right->left->right = newNode(18);
+    return a;
+}
 node *buildComplex(){
     node *a = newNode(4);
     a->left = newNode(1);
@@ -64,6 +104,54 @@ node* searchNodeBST(node *nd, int x){
         return searchNodeBST(nd->left, x);
 
 }
+
+node *deleteNodeBST(node *nd, int x){
+    node * retval = NULL;
+    if (nd == NULL) return NULL;
+    if (nd->data == x){
+        if(nd->left == NULL){
+            retval = nd->right;
+            free(nd);
+            return retval; // dont worry about linking parent to grand. just return
+        }
+        else if (nd->right == NULL){
+            retval = nd->left;
+            free(nd);
+            return retval;
+        }else{
+            node *successor = getSuccessor(nd->left);
+            nd->data = successor->data;
+            nd->left = deleteNodeBST(nd->left, successor->data);
+        }
+    }
+    else if( nd->data < x){
+        nd->right = deleteNodeBST(nd->right, x);// link parent to grand here.
+    }
+    else
+        nd->left = deleteNodeBST(nd->left, x);
+
+    return nd;
+}
+
+node *getSuccessor(node * nd){
+    while(nd != NULL)
+        nd= nd->right;
+    return nd;
+}
+
+node *searchNode(node * nd, int k){
+    node *res = NULL;
+    if(nd == NULL) return NULL;
+
+    if(nd->data == k) return nd;
+
+    if(nd->left != NULL)
+        return searchNode(nd->left,k);
+    if(nd->right != NULL)
+        return searchNode(nd->right,k);
+}
+
+//Traversals
 void printInorderTraverse(node * nd){
     if(nd == NULL) return;
     printInorderTraverse(nd->left);
@@ -86,7 +174,9 @@ void printLevelorderTraverse(node *nd){
     int i=0;
     for(i=1; i<=getHeight(nd);i++){
         printLevelHelper(nd,i);
+        printf("\n");
     }
+    printf("\n");
 }
 void printLevelHelper(node *nd, int height){
     if (nd == NULL) return;
