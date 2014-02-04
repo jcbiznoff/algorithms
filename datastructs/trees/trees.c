@@ -70,6 +70,8 @@ node *buildComplex(){
     a->right->right = newNode(10);
     a->right->left = newNode(7);
     a->right->right->right = newNode(12);
+
+    return a;
 }
 void print123(node *a){
     printf("  %d\n",a->data);
@@ -93,6 +95,7 @@ void insertNodeBST(node *nd, int x){
     else
         insertNodeBST(nd->right,x);
 }
+
 node* searchNodeBST(node *nd, int x){
     if(nd == NULL) return NULL;
 
