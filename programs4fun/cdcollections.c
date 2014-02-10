@@ -8,6 +8,40 @@ typedef struct _cds{
     char *title;
 }cd;
 
+typedef struct _cdq{
+    cd *mycd;
+    struct _cdq *next;
+}cdq;
+
+cdq *mainQ;
+
+cdq* initcdq(){
+    cdq * myq = (cdq*)malloc(sizeof(cdq));
+    myq->mycd = NULL;
+    myq->next = NULL;
+    return myq;
+}
+
+void enqueueCdq(cdq **q, cd *mycd){
+    cdq * newNode = (cdq*)malloc(sizeof(cdq));
+
+    newNode->mycd = mycd; //would this work? not sure
+    newNode->next = *q;
+    *q = newNode;
+}
+
+void deleteCq(cdq **q){
+    cdq *cur = *q;
+    cdq *tmp;
+    while(cur != NULL){
+        tmp = cur;
+        *q = cur->next;
+    //to do
+        free(tmp);
+        cur= cur->next;
+    }
+}
+
 cd* initCds(){
     cd * myCd = (cd *)malloc(sizeof(cd));
     myCd->title = NULL;
@@ -26,6 +60,14 @@ void printOptions(){
     printf("*********************************************\n");
 }
 
+void printPrintCdOption(){
+    cdq *cur = mainQ;
+    while(cur != NULL){
+        printf("artist: %s, index: %d, title: %s\n", cur->mycd->artists, cur->mycd->indexId, cur->mycd->title);
+        cur= cur->next;
+
+    }
+}
 void processNewCdIn(char *aname, int idx, char *title){
    cd* cd1 = initCds();
     // add name
@@ -34,7 +76,10 @@ void processNewCdIn(char *aname, int idx, char *title){
     cd1->indexId = idx;
     cd1->title = (char*)malloc(sizeof(char)*100);
     strcpy(cd1->title, title);
-    //add to queue
+    //add to queue/stack?
+    enqueueCdq(&mainQ, cd1);
+    //signal finish:
+    printf("done\n");
 }
 void printAddCdOption(){
     char aname[50];
@@ -49,18 +94,12 @@ void printAddCdOption(){
     scanf("%s",title);
 
     processNewCdIn(aname, idx, title);
-    printf("done\n");
-    printOptions();
-
 }
 
 void printDeleteCdOption(){
 
 }
 void printSearchCdOption(){
-
-}
-void printPrintCdOption(){
 
 }
 void readOptions(){
@@ -86,6 +125,7 @@ void readOptions(){
 int main(){
     while(1){
         printOptions();
+        readOptions();
     }
     return 0;
 }

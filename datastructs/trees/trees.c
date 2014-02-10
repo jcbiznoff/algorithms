@@ -215,6 +215,35 @@ void printReverseLevelTraverse(node *nd){
         printLevelHelper(nd, i);
     }
 }
+
+void printInorderMorris(node *nd){
+    node *cur = nd;
+    node *pre;
+    if(nd == NULL)
+         return;
+
+    while(cur != NULL){
+        if(cur->left == NULL){
+            printf("%d ", nd->data);
+            cur = cur->right;
+        }else{
+
+            pre= cur->left;
+            while(pre->right != NULL && pre->right != cur)
+                pre=pre->right;
+            if(pre->right ==NULL){
+                pre->right =cur;
+                cur= cur->left;
+            }else{
+                pre->right =NULL;
+                printf("%d ", cur->data);
+                cur=cur->right;
+            }
+        }
+    }
+}
+
+
 void printNodesOneLevel(node *nd, int lvl){
     printLevelHelper(nd,lvl);
 }

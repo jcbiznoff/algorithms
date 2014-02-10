@@ -72,3 +72,47 @@ int findMinimumInSortedRotated(int arr[], int l, int h);
  *  for given set of nodes
  */
 void printPermutation(int arr[]);
+
+
+/*hasArrayTwoCand
+ * find pair with sum equal to specified value.
+ * 1. sort array in ascending order
+ * 2. set index i,j to start and end
+ * 3. loop while i<j
+ * 4. if sum > a[i] + a[j], decrease j
+ * 5. else if sum < a[i] + a[j] increase i
+ * 6. else return true
+ * 7. return false.
+ */
+
+int hasArrayTwoCand(int arr[], int n, int sum);
+
+/*hasArrayTwoCandHash
+ * 1. create a hash map, set to 0
+ * 2. traverse array
+ * 3. check if M[sum - a[i]] is set to 1
+ * 4. otherwise set M[a[i]] to 1
+ */
+
+
+ int findMajorityElement(int arr[], int n);
+
+/*findNumberOddTimes
+ * problem: all numbers occur even number of times except for one. find this one.
+ * 1. do bitwise XOR of all elements.
+*/
+
+ int findNumberOddTimes(int arr[], int n);
+
+ /*maxSubarraySum
+  * problem: sum of contiguous subarray which has the largest sum => negative only affects outcom => negative only affects outcom => negative only affects outcomeee
+  * 1. loop and cumulate sum
+  */
+ int maxSubArraySum(int a[], int n);
+
+ /*findMissingNum
+  * given 1 to n, find a missing number
+  * 1. get sum of numbers.
+  * 2. subtract each one.
+  * 3. whatever is left is the number
+  */

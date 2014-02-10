@@ -515,11 +515,12 @@ void printInorderWithStack(node * nd);
  * inorder traversal no recursion, no stack
  * 1. initi cur as root
  * 2. while cur is not null
- * 3. if cur->left is null
- * 4. print cur data, and cur=vur->right
+ * 3.   if cur->left is null
+ * 4.   print cur data
+ *      cur=cur->right
  * 5. else
- * 6. make cur->right as right most node is currents left sub tree
- * 7. cur=cur->left
+ * 6.   make cur->right as right most node is currents left sub tree
+ * 7.   cur=cur->left
  */
 void printInorderMorris(node *nd);
 

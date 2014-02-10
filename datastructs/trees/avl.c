@@ -114,7 +114,7 @@ node *leftRotate(node *nd){
 }
 
 node * rightRotate(node * nd){
-    //save tmp data, and swap
+    //save leftnode, right of left's node
     node * tmp = nd->left;
     node * tmp2 = tmp->right;
 
@@ -124,7 +124,7 @@ node * rightRotate(node * nd){
     //2. update heights
     tmp->height = max(getHeight(tmp->left), getHeight(tmp->right)) + 1;
     tmp2->height = max(getHeight(tmp2->left), getHeight(tmp2->right)) + 1;
-    //3. return root
+    //3. return new root
     return tmp;
 }
 
@@ -148,4 +148,9 @@ int getHeight(node *nd){
 }
 int max(int a, int b){
     return (a > b) ? a: b;
+}
+node *getSuccessor(node * nd){
+    while(nd!=NULL)
+        nd=nd->right;
+    return nd;
 }

@@ -31,4 +31,4 @@ int getHeight(node *);
 node * deleteNode(node*);
 int max(int, int);
 int getBalance(node *);
-
+node* getSuccessor(node *);

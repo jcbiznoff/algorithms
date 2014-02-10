@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "queue.c"
+#include "../datastructs/queue/queue.c"
 #include "sorttest.h"
+
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) ((a)>(b)?(a):(b))
 
 void printarray(int *a, int len){
     int i;
@@ -229,4 +232,36 @@ void countingsort(int *a, int len){
     }
 
     printarray(b, len);
+}
+
+/*radixSort:
+ * sort digit by digit
+ */
+
+void countSortMod(int *a, int n, int digit){
+    int i;
+    int c[10]={}, out[n];
+    //1. bin
+    for(i=0; i<n;i++)
+        c[(a[i]/digit)%10]++; //smart move here. divide by the digit to truncate right most, then take mod to get right most dig. => sequential extrapolation
+    //2. cumulate
+    for(i=1; i<10; i++)
+        c[i] = c[i] + c[i-1];
+    //3. sourt orig.
+    for (i=n-1; i>=0; i++){
+        out[c[(a[i]/digit)%10 - 1]] = a[i];
+        c[(a[i]/digit)%10]--;
+    }
+}
+
+
+void radixSort(int *a, int n){
+    int i;
+    int m = a[0];
+
+    for (i=0; i<n;i++)
+        m = max(m,a[i]);
+
+    for (int i=1; m/i > 0; i*=10)
+        countSortMod(a, n, i);
 }
