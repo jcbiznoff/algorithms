@@ -12,14 +12,10 @@ void pq_init(pq *q){
 }
 void bubbleup(pq *q, int x){
 
-    int tmp;
-
     if (pq_parent(x) == 0) return ;
 
     if (q->q[pq_parent(x)] > q->q[x]){
-        tmp = q->q[pq_parent(x)];
-        q->q[pq_parent(x)] = q->q[x];
-        q->q[x] = tmp;
+        swap(&(q->q[pq_parent(x)]) , &(q->q[x]))
     }
     bubbleup(q, pq_parent(x));
 }
@@ -42,8 +38,8 @@ void bubbledown(pq* q, int x){
     int tmp;
     int minidx = x;
 
-    int c1 = pq_child(x);
-    int c2 = pq_child(x) + 1;
+    int c1 = pq_child(x); //left node
+    int c2 = pq_child(x) + 1; //right node
 
     if(q->q[c1] < q->q[x]){
         minidx = c1;
@@ -52,9 +48,8 @@ void bubbledown(pq* q, int x){
         minidx = c2;
     }
     if (minidx != x){
-        tmp = q->q[minidx];
-        q->q[minidx] = q->q[x];
-        q->q[x] = tmp;
+        swap(&(q->q[minidx]), &(q->q[x]));
+
         bubbledown(q, pq_child(x));
     }
 }
@@ -70,6 +65,7 @@ int extractmin(pq *q){
     }
     return min;
 }
+
 
 void heapsortt(int *a, int len){
     pq q;

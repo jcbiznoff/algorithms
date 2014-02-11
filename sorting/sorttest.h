@@ -1,5 +1,3 @@
-
-
 void printarray(int *a, int len);
 void bubblesortt(char **a, int len);
 void selectionSort(int *a, int len);

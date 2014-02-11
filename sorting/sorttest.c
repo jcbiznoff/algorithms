@@ -101,29 +101,17 @@ int partition (int *a, int l, int h){
 
 }
 int partition2(int *a, int l, int h){
-    int f= l;
     int p = a[f];
-    int tmp;
-    //p = a[0];
-    l++;
-    while(l<=h){
-        while(a[l] <= p && l<=h)
-            l++;
-        while(a[h] > p && l<h)
-            h--;
-        if(l<h){
-            tmp = a[l];
-            a[l] = a[h];
-            a[h] = tmp;
-        }
-        else
-            break;
-    }
-    tmp = a[f];
-    a[f] = a[h];
-    a[h] = tmp;
+    int i = l-1; //index of smaller elem.
 
-    return h;
+    for(int j=l; j<h;j++){
+        if(a[j] <= p){ //comparing against pivot. not a[i]
+            i++;
+            swap(&a[i], &a[j]);
+        }
+    }
+    swap(&a[i+1], &a[h]);
+    return i+1;
 }
 
 void quicksortt(int *a, int l, int h){
@@ -243,7 +231,7 @@ void countSortMod(int *a, int n, int digit){
     int c[10]={}, out[n];
     //1. bin
     for(i=0; i<n;i++)
-        c[(a[i]/digit)%10]++; //smart move here. divide by the digit to truncate right most, then take mod to get right most dig. => sequential extrapolation
+        c[(a[i]/digit)%10]++; //smart move here. divide by the digit to truncate right most, then take mod to get right most dig. => sequential extrapolation: ex) 4321, digit 100 -> 43 -> 43 mod 10 => 3
     //2. cumulate
     for(i=1; i<10; i++)
         c[i] = c[i] + c[i-1];
@@ -252,16 +240,20 @@ void countSortMod(int *a, int n, int digit){
         out[c[(a[i]/digit)%10 - 1]] = a[i];
         c[(a[i]/digit)%10]--;
     }
+
+    for(i =0 ;i <n; i++){
+        a[i] = out[i];
+    }
 }
 
 
 void radixSort(int *a, int n){
-    int i;
     int m = a[0];
+    int i;
 
     for (i=0; i<n;i++)
         m = max(m,a[i]);
 
-    for (int i=1; m/i > 0; i*=10)
+    for (i=1; m/i > 0; i*=10)
         countSortMod(a, n, i);
 }

@@ -17,7 +17,7 @@ void sort012(int *a, int n){
     //1. init l,m,h index
     int l=0, m=0, h=n-1;
     //2. loop while m<=h
-    while(m<=h){
+    while(l<=m && m<=h){
     //3.    three cases for a[m]
         switch(a[m]){
     //          0: swap a[l] and a[m]; l++, m++
