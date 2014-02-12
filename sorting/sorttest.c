@@ -3,63 +3,38 @@
 #include <string.h>
 
 #include "../datastructs/queue/queue.c"
+#include "../utils/utils.c"
 #include "sorttest.h"
 
-#define min(a,b) (((a)<(b))?(a):(b))
-#define max(a,b) ((a)>(b)?(a):(b))
-
-void printarray(int *a, int len){
-    int i;
-    printf("{");
-    for (i=0; i<len;i++){
-        printf("%d ",a[i]);
-    }
-    printf("}\n");
-}
-
-void bubblesortt(char **a, int len){
-    char *tmp;
+void bubblesortt(char **a, int len){ //assume equal allocation size for each elem.
     int i, j =0;
     for (i=1; i< len; i++){
         for (j=1; j<= len-i; j++){
-            if( strcmp(a[j-1] ,a[j])>0 ){
-                tmp=a[j];
-                a[j]=a[j-1];
-                a[j-1]=tmp;
-            }
+            if( strcmp(a[j-1] ,a[j])>0 )
+                swapStr(&a[j-1], &a[j]);
         }
     }
-    //printarray(a,len);
 }
+
 void selectionSort(int *a, int len){
-    int min, tmp;
     int i,j;
     for (i=0; i<len; i++){
-        min = i;
         for (j=i+1; j<len; j++){
-            if(a[j] < a[min]){
-                tmp = a[min];
-                a[min] = a[j];
-                a[j] = tmp;
-            }
+            if(a[j] < a[i])
+                swapInts(&a[j], &a[i]);
         }
     }
-
-    printarray(a,len);
 }
 
 void insertionSort(int *a, int len){
-    int i,j,tmp;
+    int i,j;
     for (i=1; i<len ;i++){
         j=i;
         while ((j>0) && (a[j-1]> a[j])){
-            tmp = a[j];
-            a[j] = a[j-1];
-            a[j-1] = tmp;
+            swapInts(&a[j-1], &a[j]);
             j--;
         }
     }
-    printarray(a,len);
 }
 
 void insertionSort2(int *a, int len){
@@ -76,42 +51,20 @@ void insertionSort2(int *a, int len){
             }
         }
     }
-    printarray(a,len);
 }
-int partition (int *a, int l, int h){
-    int key = h;
-    int i;
-    int idx = l;
-    int tmp;
 
-    for (i=1; i<h ;i++){
-        if(a[key] > a[i]){
-            tmp = a[idx];
-            a[idx] = a[i];
-            a[i] = tmp;
-            idx++;
+int partition(int *a, int l, int h){
+    int p = a[h];
+    int j = l-1; //index of smaller elem.
+
+    for(int i=l; i<h;i++){
+        if(a[i] <= p){ //comparing against pivot. not a[i]
+            j++;
+            swapInts(&a[j], &a[i]);
         }
     }
-
-    tmp = a[key];
-    a[key] = a[idx];
-    a[idx] = tmp;
-
-    return idx;
-
-}
-int partition2(int *a, int l, int h){
-    int p = a[f];
-    int i = l-1; //index of smaller elem.
-
-    for(int j=l; j<h;j++){
-        if(a[j] <= p){ //comparing against pivot. not a[i]
-            i++;
-            swap(&a[i], &a[j]);
-        }
-    }
-    swap(&a[i+1], &a[h]);
-    return i+1;
+    swapInts(&a[j+1], &a[h]);
+    return j+1;
 }
 
 void quicksortt(int *a, int l, int h){
@@ -122,36 +75,29 @@ void quicksortt(int *a, int l, int h){
         quicksortt(a,p+1,h);
     }
 }
-void quicksortexec(int *a, int l, int  h){
-    quicksortt(a,l,h);
-    printarray(a,h);
-}
 
 void mergeme(int *a, int s, int m, int e){
     int i;
     int l = s;
     int r = m + 1;
-    int destidx =0;
+    int k =0;
     int *tmpa = (int*)malloc(sizeof(int)* (e-s+1));
 
     while( (l <= m) && (r <= e)){
-        if (a[l] <= a[r]){
-            tmpa[destidx] = a[l++];
-        }
-        else{
-            tmpa[destidx] = a[r++];
-        }
-        destidx++;
+        if (a[l] <= a[r])
+            tmpa[k] = a[l++];
+        else
+            tmpa[k] = a[r++];
+        k++;
     }
-    while (l<=m){
-        tmpa[destidx++] = a[l++];
-    }
-    while (r<=e){
-        tmpa[destidx++] = a[r++];
-    }
-    destidx=0;
+    while (l<=m)
+        tmpa[k++] = a[l++];
+    while (r<=e)
+        tmpa[k++] = a[r++];
+
+    k=0;
     for (i=s; i<=e; i++)
-        a[i] = tmpa[destidx++];
+        a[i] = tmpa[k++];
     free(tmpa);
 }
 void mergemeq(int *a, int s, int m, int e){
@@ -204,13 +150,9 @@ void heapsortexec(int *a, int len){
 
 void countingsort(int *a, int len){
     int i,maxa=0;
-    int c[100];
-    int b[100];
-    for (i=0;i<len; i++) if (a[i]>maxa) maxa =a[i];
-    for (i=0;i<=maxa; i++) {
-        c[i] = 0;
-        b[i] = 0;
-    }
+    int c[100] ={};
+    int b[100] = {};
+    for (i=0;i<len; i++) maxa = maxInt(a[i],maxa);
     for (i=0;i<len; i++) c[a[i]]++;
     for (i=1; i<=maxa; i++) c[i] += c[i-1];
 
@@ -219,7 +161,7 @@ void countingsort(int *a, int len){
         c[a[i]]--;
     }
 
-    printarray(b, len);
+    for(i=0; i<len; i++) a[i] = b[i];
 }
 
 /*radixSort:
@@ -229,31 +171,23 @@ void countingsort(int *a, int len){
 void countSortMod(int *a, int n, int digit){
     int i;
     int c[10]={}, out[n];
-    //1. bin
-    for(i=0; i<n;i++)
-        c[(a[i]/digit)%10]++; //smart move here. divide by the digit to truncate right most, then take mod to get right most dig. => sequential extrapolation: ex) 4321, digit 100 -> 43 -> 43 mod 10 => 3
-    //2. cumulate
-    for(i=1; i<10; i++)
-        c[i] = c[i] + c[i-1];
-    //3. sourt orig.
+    for(i=0; i<n;i++) c[(a[i]/digit)%10]++; //smart move here. divide by the digit to truncate right most, then take mod to get right most dig. => sequential extrapolation: ex) 4321, digit 100 -> 43 -> 43 mod 10 => 3
+    for(i=1; i<10; i++) c[i] += c[i-1];
     for (i=n-1; i>=0; i++){
         out[c[(a[i]/digit)%10 - 1]] = a[i];
         c[(a[i]/digit)%10]--;
     }
 
-    for(i =0 ;i <n; i++){
-        a[i] = out[i];
-    }
+    for(i =0 ;i <n; i++) a[i] = out[i];
 }
 
 
 void radixSort(int *a, int n){
-    int m = a[0];
-    int i;
+    int m = a[0]; //in order to save the maximum element for digit limit
 
-    for (i=0; i<n;i++)
-        m = max(m,a[i]);
+    for (int i=0; i<n;i++)
+        m = maxInt(m,a[i]);
 
-    for (i=1; m/i > 0; i*=10)
+    for (int i=1; m/i > 0; i*=10)
         countSortMod(a, n, i);
 }
