@@ -2,18 +2,34 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "linkedlist.h"
+#include <limits.h>
+
+node* build123(){
+    node *l = NULL;
+    for(int i=0; i<3;i++)
+        push(&l, 3-i);
+    return l;
+}
+
+void printList(node *l){
+    node *cur;
+    printf("{ ");
+    for(cur = l; cur != NULL; cur = cur->next)
+        printf("%d ", cur->x);
+    printf("}\n");
+}
 
 int pop(node ** l){
     int data;
     node *cur = *l;
-
-    assert(cur != NULL);//isEmpty condition
+    if(cur == NULL)
+        return INT_MIN;
 
     data = cur->x; //store data
     *l = cur->next; //unlink
     free(cur); //free
 
-	return data;
+    return data;
 }
 void push(node ** l, int data){
     node * newnode = (node*)malloc(sizeof(node));
@@ -21,6 +37,7 @@ void push(node ** l, int data){
     newnode->next = *l; //link next
     *l = newnode;
 }
+
 int length(node * l){
     int count = 0;
     node* cur = l;
@@ -30,6 +47,7 @@ int length(node * l){
     }
     return count;
 }
+
 node* appendNode(node ** l, int data){
     node * cur = *l;
     if(cur == NULL)
@@ -40,30 +58,19 @@ node* appendNode(node ** l, int data){
     }
     push(&(cur->next),data);
 }
-/*
-node* copyList(node * l){
-    node * newlist ;
-    node * cur = l;
-    while(cur->next != NULL){
-        push(&newlist, cur->x);
-        cur = cur->next;
-    }
-    return newlist;
-}
-*/
+
 void insertAt(node ** l, int k, int data){
     node * cur = *l;
-    int count = 0 ;
+    int i ;
     if(k==0) push(l,data);
-    while(cur !=NULL){
-        if (count == k)
-            break;
-        count ++;
-        cur = cur->next;
-    }
-    push(&(cur->next),data);
+    else{
+        for(i=0; i<k-1 ;i++)
+            cur = cur->next;
 
+        push(&(cur->next),data);
+    }
 }
+
 void deleteList(node ** l){
     node *cur = *l;
     node *tmp;
@@ -74,24 +81,8 @@ void deleteList(node ** l){
         cur = tmp;
     }
 }
-void printList(node *l){
-    int n = length(l);
-    node *cur = l;
 
-    for(int i=0; i<n;i++){
-        printf("%d ", cur->x);
-        cur =cur->next;
-    }
-    printf("\n");
-}
-node* build123(){
-    node *l = NULL;
-    for(int i=0; i<3;i++)
-        push(&l, 3-i);
-    return l;
-}
-
-int count(node* l, int data){
+int countOccurence(node* l, int data){
     node* cur = l;
     int c=0;
     while (cur != NULL)
@@ -101,6 +92,7 @@ int count(node* l, int data){
     }
     return c;
 }
+
 int getNth(node* l, int k){
     int count =0;
     node * cur = l;
@@ -126,41 +118,50 @@ void sortListViaMerge(node **h){
 }
 
 
-node* sortedInsert(node ** l1, node * l2){
-    //two sorted list, give the intersection of two lists
+//given a list and node, insert node to a list
+void insertToSortedList(node ** l, node * nd){
 
-    node * a;
-    node *cur, *cur2;
-    for(cur=a;cur!=NULL;cur=cur->next){
-        for(cur2=a; cur2->x <cur->x; cur2=cur2->next){
-            if(cur->x == cur2->x){
-                push(&a,cur2->x);
-                break;
-            }
-        }
+    if(*l == NULL || (*l)->x >= nd->x){
+        nd->next = *l;
+        *l = nd;
     }
-    return a;
-    //1. advance cur until null for l1
-    //2. advance cur2 until null for l2
-    //3. if cur->x == cur2 ->x
-    //      push(&a,x);
-    //      break;
-    //4. else continue;
-    //5. return *a
-    //
-    //above is wrong assumption
-    //1. loop while l1!=NULL and l2!=NULL
-    //2. if l1->x == l2->x
-    //      push x
-    //      advance both
-    //3. else if( l1->x > l2->x)
-    //      l2 = l2->next;
-    //4. else
-    //      l1 = l1->next;
-    //
+    else{
+        node *cur = *l;
+        while(cur->next != NULL){
+            if(cur->next->x > nd->x)
+                break;
+            cur=cur->next;
+        }
+        nd->next = cur->next;
+        cur->next = nd;
+    }
 }
-void insertSort(node ** l){}
-void append(node ** ldest, node ** lsrc){}
+//given a list, change it to a sorted order => sort a list!
+void insertSort(node ** l){
+    node *a = NULL;
+    node *cur = *l;
+    node *tmp;
+
+    while(cur != NULL){
+        tmp = cur->next;
+        insertToSortedList(&a, cur);
+        cur = cur->next;
+    }
+    *l = a;
+}
+
+void appendLists(node ** ldest, node ** lsrc){
+    node *cur = *ldest;
+    if(*ldest == NULL) *ldest = *lsrc;
+    else {
+        while(cur!=NULL){
+            cur=cur->next;
+        }
+        cur->next = *lsrc;
+    }
+    *lsrc= NULL;
+}
+
 void frontBackSplit(node * lsrc, node **l1, node **l2){
     //split list into front and back. save each list to parameter address
     node *cur = lsrc;
@@ -184,11 +185,65 @@ void frontBackSplit(node * lsrc, node **l1, node **l2){
     cur->next = NULL;
 
 }
-void removeDups(node * l){
+void removeDupsSortedList(node * l){
+    node *cur = l;
+    node *tmp;
+
+    if(cur == NULL) return;
+
+    while(cur->next != NULL){
+        if(cur->x == cur->next->x){
+            tmp = cur->next;
+            cur->next = tmp->next;
+            free(tmp);
+        }
+        else
+            cur=cur->next;
+    }
 }
-void moveNode(node** l1, node** l2){}
-void altSplit(node* src, node** l1, node** l2){}
-node* shuffleMerge(node* l1, node* l2){}
+
+void movefrontNode(node** l1, node** l2){
+
+    node *src = *l2;
+    if(src == NULL)return;
+
+    *l2 = src->next;
+    src->next = *l1;
+    *l1 = src;
+}
+
+void altSplit(node* src, node** l1, node** l2){
+
+    node *a=NULL, *b=NULL;
+    node *cur = src;
+    while(cur != NULL){
+        movefrontNode(&a, &cur);
+        if(cur != NULL)
+            movefrontNode(&b, &cur);
+    }
+    *l1 = a;
+    *l2 = b;
+}
+node* shuffleMerge(node* l1, node* l2){
+    node * res =NULL;
+    node *cur1=l1, *cur2=l2;
+
+
+    while(1){
+        if(cur1 == NULL)
+            res = l2;
+        if(cur2 == NULL)
+            res = l1;
+
+        res = cur1;
+        res->next = cur2;
+
+        cur1 = cur1->next;
+        cur2 = cur2->next;
+
+    }
+}
+
 node* sortedMerge(node* l1, node* l2){
     node *result; //returning node ptr
     node **lastRef = &result; //
@@ -203,20 +258,61 @@ node* sortedMerge(node* l1, node* l2){
         }
         if(l1->x > l2->x){
             //move l1 to lastrRef
-            moveNode(lastRef, &l2);
+            movefrontNode(lastRef, &l2);
         }
         else{
             //move l2 to l1
-            moveNode(lastRef, &l1);
+            movefrontNode(lastRef, &l1);
         }
         lastRef = &((*lastRef) -> next);
     }
     return(result);
 
 }
-node* sortedIntersect(node* l1, node* l2){}
-void reverseList(node **l){}
-void recurseReverse(node **l){}
+
+node* getIntersectListfromSorted(node* l1, node* l2){
+    node * cur1,*cur2;
+    node * res=NULL;
+    for(cur1 = l1; cur1 != NULL; cur1=cur1->next){
+        for(cur2 = l2; cur2 != NULL; cur2=cur2->next){
+            if(cur1->x == cur2->x)
+                push(&res, cur1->x);
+        }
+    }
+    return res;
+}
+
+
+void reverseList(node **l){
+    node *cur= *l, *tmp;
+    node *res = NULL; // push on to here
+
+    while(cur != NULL){
+        tmp = cur->next;
+        cur->next = res;
+        res = cur;
+        cur = tmp;
+    }
+    *l = res;
+}
+
+void recurseReverse(node **l){
+    node * first;
+    node * rest;
+
+    if(*l == NULL) return;
+
+    first = *l;
+    rest = first->next;
+
+    if(rest == NULL) return;
+    recurseReverse(&rest);
+
+    first->next->next = first;
+    first->next = NULL;
+    *l = rest;
+
+}
 
 void pairwiseSwapIter(node ** l){
    if(*l== NULL || (*l)->next == NULL) return;
@@ -239,8 +335,6 @@ void pairwiseSwapIter(node ** l){
     prev = tmp; //update pointers
     cur = tmp->next;
    }
-
-
 }
 
 node * pairwiseSwapRecur(node * l){
