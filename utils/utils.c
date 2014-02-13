@@ -9,12 +9,12 @@ void swapInts(int *a, int *b){
     *b = tmp;
 }
 
-void swapStr(char **a, char **b){
+void swapStr(char **a, char **b){ //use to swap ptrs: char * datas
     char *tmp = *a;
     *a = *b;
     *b = tmp;
 }
-void swapStr2(char *a, char *b){
+void swapStr2(char *a, char *b){ //use to swap data: char [] data, fixed len.
     char *tmp = (char*)malloc(sizeof(char)*strlen(a) + 1);
     strcpy(tmp, a);
     strcpy(a,b);

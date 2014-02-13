@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "linkedlist.h"
+#include "../../utils/utils.c"
 #include <limits.h>
 
 node* build123(){
@@ -102,7 +103,6 @@ int getNth(node* l, int k){
     }
     return cur->x;
 }
-void sortListViaBubble(node **l);
 void sortListViaMerge(node **h){
     node * head = *h;
     node *a;
@@ -228,7 +228,6 @@ node* shuffleMerge(node* l1, node* l2){
     node * res =NULL;
     node *cur1=l1, *cur2=l2;
 
-
     while(1){
         if(cur1 == NULL)
             res = l2;
@@ -346,4 +345,39 @@ node * pairwiseSwapRecur(node * l){
 
     l->next->next = l;
     l->next = pairwiseSwapRecur(rem);
+}
+
+node * partitionDLL(node **head, node *l, node *r){
+    int p = r->x;
+    node *j = l->prev; //add for DLL
+
+    for(node *i =l ; i != r ;i = i->next){
+        if(i->x < p){//key 0
+            j = (j == NULL) ? l : j->next;
+            swapInts(&(j->x), &(i->x)); //key 1
+        }
+    }
+
+    j = (j==NULL) ? l : j->next;
+    swapInts(&(j->x), &(r->x)); //key2
+    return j;
+
+
+}
+
+void quickSortDLL(node **head,node *l,node * r){
+    node *p;
+    if(r!=NULL && l != r && l!=r->next){
+        p = partiitonDLL(head,l,r);
+        quickSortDLL(head,l,p->prev);
+        quickSortDLL(head,p->next,r);
+    }
+}
+
+node * getLastNode(node *l){
+    node *cur = l;
+    while(cur != NULL){
+        cur = cur->next;
+    }
+    return cur;
 }

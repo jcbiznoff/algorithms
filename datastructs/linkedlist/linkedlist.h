@@ -37,3 +37,6 @@ void recurseReverse(node **);
 void pairwiseSwapIter(node **l);
 node* pairwiseSwapRecur(node *l);
 
+node *partitionDLL(node **, node *, node *);
+void quickSortDLL(node **, node *, node *);
+
