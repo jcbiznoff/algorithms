@@ -1,0 +1,37 @@
+char * vs char [] 
+
+char * a = "asdf"
+    pointer to a string
+    - read only
+    - not stored in stack. remains after function calls
+
+char a[]= "abcd"
+    - read/write
+    - stored in stack. deleted after funciton pops
+    - unsafe to return a at function exit
+
+assignment is the only operation allowed for structs
+
+deep vs shallow copy:
+struct x{
+    char * b;
+}
+x = y;
+
+
+type qualifiers:
+const, volatile
+
+storage class specifiers:
+auto
+register
+static
+extern
+typedef:
+    1) multiple storage def not allowed ex) typedef static -> compilation error
+
+
+static vars:
+C: static vars only init using constants. otherwise compiliation error. C++ allows
+
+static vars cannot be used in function params.

@@ -94,7 +94,6 @@ int hasArrayTwoCand(int arr[], int n, int sum);
  * 4. otherwise set M[a[i]] to 1
  */
 
-
  int findMajorityElement(int arr[], int n);
 
 /*findNumberOddTimes
@@ -116,3 +115,10 @@ int hasArrayTwoCand(int arr[], int n, int sum);
   * 2. subtract each one.
   * 3. whatever is left is the number
   */
+
+
+ /*findMedianSorted
+  * prob: 2 sorted arrays, each size n, find median after merging
+  *
+  */
+ int findMedianSorted(int a[], int b[], int n);
