@@ -12,6 +12,8 @@ int pop(node **);
 void push(node **, int data);
 node* appendNode(node **, int data);
 void insertAt(node **, int k, int data);
+node *deleteNodeRecur(node *, int targ);
+
 
 void deleteList(node **);
 int getNth(node*, int k);

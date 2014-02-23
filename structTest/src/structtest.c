@@ -22,11 +22,21 @@ typedef struct _D{
     int s;
     char c;
 }D;
+typedef struct _E{
+    char d;
+    int s;
+    char c;
+}E;
+typedef struct _F{
+    char d;
+    char c;
+    int s;
+}F;
+
+
 
 int main(){
-    printf("size of A: %lu\n", sizeof(A));
-    printf("size of A: %lu\n", sizeof(B));
-    printf("size of A: %lu\n", sizeof(C));
-    printf("size of A: %lu\n", sizeof(D));
+    printf("size of A: %lu\n", sizeof(E));
+    printf("size of A: %lu\n", sizeof(F));
     return 0;
 }

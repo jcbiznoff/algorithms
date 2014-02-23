@@ -60,6 +60,37 @@ node* appendNode(node ** l, int data){
     push(&(cur->next),data);
 }
 
+node* deleteNodeRecur(node* cur, int targ){
+    if(cur == NULL) return NULL;
+
+    if(cur->x == targ){
+        node *tmp = cur->next;
+        free(cur);
+        return tmp;
+    }
+
+    cur->next = deleteNodeRecur(cur->next, targ);
+
+    return cur;
+}
+
+void deleteNodeIter(node ** l, int targ){
+    node * prev, *cur;
+    prev = NULL;
+
+    for(cur=*l; cur!=NULL; prev=cur, cur=cur->next){
+        if(cur->x == targ){
+            if(prev == NULL)
+                *l = cur->next;
+            else{
+                prev->next= cur->next;
+            }
+            free(cur);
+        }
+    }
+}
+
+
 void insertAt(node ** l, int k, int data){
     node * cur = *l;
     int i ;
