@@ -19,7 +19,12 @@ void printList(node *l){
         printf("%d ", cur->x);
     printf("}\n");
 }
-
+/*
+ * 1. check null
+ * 2. store data
+ * 3. update head
+ * 4. free cur
+ */
 int pop(node ** l){
     int data;
     node *cur = *l;
@@ -32,6 +37,7 @@ int pop(node ** l){
 
     return data;
 }
+
 void push(node ** l, int data){
     node * newnode = (node*)malloc(sizeof(node));
     newnode->x = data; //insert data
@@ -57,7 +63,7 @@ node* appendNode(node ** l, int data){
     while (cur->next != NULL){
         cur= cur->next;
     }
-    push(&(cur->next),data);
+    push(&(cur->next),data);//important
 }
 
 node* deleteNodeRecur(node* cur, int targ){
@@ -89,7 +95,6 @@ void deleteNodeIter(node ** l, int targ){
         }
     }
 }
-
 
 void insertAt(node ** l, int k, int data){
     node * cur = *l;
@@ -134,20 +139,23 @@ int getNth(node* l, int k){
     }
     return cur->x;
 }
-void sortListViaMerge(node **h){
+void mergeSortList(node **h){
     node * head = *h;
-    node *a;
-    node *b;
+    node *a, *b;
+    //1. base
     if( head ==NULL || head->next == NULL)
         return;
+
+    //2. split
     frontBackSplit(head, &a, &b);
 
-    sortListViaMerge(&a);
-    sortListViaMerge(&b);
+    //3. recur
+    mergeSortList(&a);
+    mergeSortList(&b);
 
+    //4. merger
     *h = sortedMerge(a,b);
 }
-
 
 //given a list and node, insert node to a list
 void insertToSortedList(node ** l, node * nd){
@@ -167,6 +175,7 @@ void insertToSortedList(node ** l, node * nd){
         cur->next = nd;
     }
 }
+
 //given a list, change it to a sorted order => sort a list!
 void insertSort(node ** l){
     node *a = NULL;
@@ -193,29 +202,36 @@ void appendLists(node ** ldest, node ** lsrc){
     *lsrc= NULL;
 }
 
-void frontBackSplit(node * lsrc, node **l1, node **l2){
-    //split list into front and back. save each list to parameter address
-    node *cur = lsrc;
-    node *fastcur = cur;
-    if(cur == NULL) return;
-    if(cur->next == NULL) {
-        *l1 = cur;
+void frontBackSplit(node *l, node **l1, node **l2){
+    node *sp; //slow pointer
+    node *fp; //fast pointer
+
+    //base: read if lsrc is null return
+    if(l == NULL || l->next == NULL) {
+        *l1 = l;
+        *l2 = NULL;
         return;
     }
 
-    while(fastcur !=NULL){
-        fastcur = fastcur->next; // fastcur is next not cur->next->next
-        if(fastcur != NULL){
-            cur = cur->next;
-            fastcur = fastcur -> next; //fast cur independent of cur
+    //initial assignment
+    sp = l;
+    fp = sp->next;
+
+    //pointer traversals. No change in nodes
+    while(fp !=NULL){
+        fp = fp->next;
+        if(fp != NULL){
+            fp = fp->next;
+            sp = sp->next;
         }
     }
 
-    *l1 = lsrc; // do not use cur here. cur is at mid point
-    *l2 = cur->next;
-    cur->next = NULL;
-
+    //assigning nodes here
+    *l1 = l;
+    *l2 = sp->next;
+    sp->next = NULL;
 }
+
 void removeDupsSortedList(node * l){
     node *cur = l;
     node *tmp;
@@ -232,6 +248,27 @@ void removeDupsSortedList(node * l){
             cur=cur->next;
     }
 }
+
+void removeDupUnsorted(node *l){ //not changing head ptr
+    node *i, *j, *tmp;
+
+    i=l;
+    while(i!=NULL && i->next != NULL){
+        j = i;
+        while(j->next != NULL){
+            if(i->x == j->next->x){
+                tmp = j->next;
+                j->next = j->next->next;
+                free(tmp);
+            }else{
+                j=j->next;
+            }
+        }
+        i = i->next;
+    }
+
+}
+
 
 void movefrontNode(node** l1, node** l2){
 
@@ -255,6 +292,7 @@ void altSplit(node* src, node** l1, node** l2){
     *l1 = a;
     *l2 = b;
 }
+
 node* shuffleMerge(node* l1, node* l2){
     node * res =NULL;
     node *cur1=l1, *cur2=l2;
@@ -297,7 +335,25 @@ node* sortedMerge(node* l1, node* l2){
         lastRef = &((*lastRef) -> next);
     }
     return(result);
+}
 
+node *sortedMergeRecur(node *l1, node *l2){
+    node * result;
+    //base case: if one is null return the other
+    if(l1 == NULL) return l2;
+    if(l2 == NULL) return l1;
+
+    //compare immediate data
+    if(l1->x < l2->x){
+        //pre set result
+        result = l1;
+        l1->next = sortedMergeRecur(l1->next, l2);
+    }
+    else{
+        result = l2;
+        l2->next = sortedMergeRecur(l1, l2->next);
+    }
+    return result;
 }
 
 node* getIntersectListfromSorted(node* l1, node* l2){
@@ -330,18 +386,23 @@ void recurseReverse(node **l){
     node * first;
     node * rest;
 
+    //1. base
     if(*l == NULL) return;
 
+    //2. divide into two halves
     first = *l;
     rest = first->next;
 
+    //3. stopping condition
     if(rest == NULL) return;
+
+    //4. recur
     recurseReverse(&rest);
 
+    //5. put together: important
     first->next->next = first;
     first->next = NULL;
     *l = rest;
-
 }
 
 void pairwiseSwapIter(node ** l){
@@ -366,6 +427,72 @@ void pairwiseSwapIter(node ** l){
     cur = tmp->next;
    }
 }
+node * partitionList(node *h, node *e, node **newHead, node **newEnd){
+    //1. set pivot as end of list
+    node *pivot = e;
+    node *prev= NULL, *cur = h, *tail = pivot;
+
+    while(cur != pivot){
+        // leave if smaller
+        if(cur->x < pivot->x){
+            if(*newHead == NULL)
+                *newHead = cur;
+
+            prev = cur;
+            cur = cur->next;
+        }else{
+            //moving cur to end of tail=> tmp ptr, update tail
+            if(prev)
+                prev->next = cur->next;
+            node *tmp = cur->next;
+            cur->next = NULL;
+            tail->next = cur;
+            tail = cur;
+            cur = tmp;
+        }
+    }
+
+    if(*newHead == NULL)
+        *newHead = pivot;
+
+    *newEnd = tail;
+
+    return pivot;
+}
+node *getTail(node *h){
+    node *cur = h;
+    while(cur != NULL && cur->next != NULL){
+        cur = cur->next;
+    }
+    return cur;
+}
+node * quickSortList(node *head, node *e){
+    //1. base
+    if(head == NULL || head == e)
+        return head;
+
+    node * pivot;
+    node *newHead = NULL, *newEnd = NULL;
+
+    //2. parition
+    pivot = partitionList(head, e, &newHead, &newEnd);
+
+    //3. recur
+    if(newHead != pivot){
+        node *tmp = newHead;
+        while(tmp->next != pivot)
+            tmp = tmp->next;
+        tmp->next = NULL;
+
+        newHead = quickSortList(newHead, tmp);
+
+        tmp = getTail(newHead);
+        tmp->next = pivot;
+    }
+    pivot->next = quickSortList(pivot->next, newEnd);
+
+    return newHead;
+}
 
 node * pairwiseSwapRecur(node * l){
     if (l == NULL || l->next == NULL)
@@ -377,7 +504,7 @@ node * pairwiseSwapRecur(node * l){
     l->next->next = l;
     l->next = pairwiseSwapRecur(rem);
 }
-
+/*
 node * partitionDLL(node **head, node *l, node *r){
     int p = r->x;
     node *j = l->prev; //add for DLL
@@ -404,11 +531,33 @@ void quickSortDLL(node **head,node *l,node * r){
         quickSortDLL(head,p->next,r);
     }
 }
-
+*/
 node * getLastNode(node *l){
     node *cur = l;
     while(cur != NULL){
         cur = cur->next;
     }
     return cur;
+}
+
+void splitCLL(node *h, node **a, node **b){
+    node * f, *s;
+    //1. base
+    if(h == NULL) return;
+    //2. traverse: f,s pointers
+    f = h; s = h;
+    while(f->next != h && f->next->next != h){
+        f = f->next->next;
+        s = s->next;
+    }
+    //special case: even node case:
+    if(f->next->next == h)
+        f = f->next;
+    //3. update head
+    *a = h;
+    if(h->next != NULL)
+        *b = s->next;
+    //4. update tail
+    f->next = s->next;
+    s->next = h;
 }

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <time.h>
 
 void swapInts(int *a, int *b){
     int tmp = *a;
@@ -35,4 +36,21 @@ void printarray(int *a, int len){
     for (i=0; i<len;i++)
         printf("%d ",a[i]);
     printf("}\n");
+}
+
+void gendata(int *a, int len){
+    int i,tmp;
+    srand(time(NULL));
+    for (i=0; i<len;i++){
+        a[i] = i+1;
+    }
+
+    for (i=len-1; i>0; i--){
+        tmp = rand() % i + 1;
+        swapInts(&a[tmp], &a[i]);
+    }
+}
+
+int intCmpr(const void *a, const void *b){
+    return(*(int*)a - *(int*)b);
 }
