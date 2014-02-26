@@ -16,6 +16,16 @@ void bubblesortt(char **a, int len){ //assume equal allocation size for each ele
     }
 }
 
+void bubblesorttInt(int *a, int len){ //assume equal allocation size for each elem.
+    int i, j =0;
+    for (i=0; i< len; i++){
+        for (j=1; j< len-i; j++){
+            if(a[j-1] > a[j])
+                swapInts(&a[j-1], &a[j]);
+        }
+    }
+}
+
 void selectionSort(int *a, int len){
     int i,j;
     for (i=0; i<len; i++){
@@ -29,11 +39,8 @@ void selectionSort(int *a, int len){
 void insertionSort(int *a, int len){
     int i,j;
     for (i=1; i<len ;i++){
-        j=i;
-        while ((j>0) && (a[j-1]> a[j])){
+        for(j=i; j>0 && a[j-1]> a[j] ; j--)
             swapInts(&a[j-1], &a[j]);
-            j--;
-        }
     }
 }
 

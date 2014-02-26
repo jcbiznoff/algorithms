@@ -7,7 +7,8 @@
 
 node* build123(){
     node *l = NULL;
-    for(int i=0; i<3;i++)
+    int i;
+    for(i=0; i<3;i++)
         push(&l, 3-i);
     return l;
 }
@@ -57,13 +58,15 @@ int length(node * l){
 
 node* appendNode(node ** l, int data){
     node * cur = *l;
-    if(cur == NULL)
+    if(cur == NULL){
         push(l , data);
-
-    while (cur->next != NULL){
-        cur= cur->next;
+    }else{
+        while (cur->next != NULL){
+            cur= cur->next;
+        }
+        push(&(cur->next),data);//important
     }
-    push(&(cur->next),data);//important
+
 }
 
 node* deleteNodeRecur(node* cur, int targ){
@@ -368,6 +371,37 @@ node* getIntersectListfromSorted(node* l1, node* l2){
     return res;
 }
 
+
+void swapNode(node **l, int idx1, int idx2){
+    node *prev = NULL, *prev2 = NULL;
+    node *cur = *l, *cur2 = *l;
+    node *tmp = NULL;
+    int count = 0, count2 =0;
+
+    while(cur != NULL){
+        if(count == idx1) break;
+        prev = cur;
+        cur = cur->next;
+        count++;
+    }
+
+    while(cur2!= NULL){
+        if(count2 == idx2) break;
+        prev2 = cur2;
+        cur2=cur2->next;
+        count2++;
+    }
+    if(prev) prev->next = cur2;
+    if(prev2)prev2->next = cur;
+
+    tmp = cur2->next;
+    cur2->next = cur->next;
+    cur->next = tmp;
+
+    if(*l == cur) *l = cur2;
+    else if(*l == cur2) *l = cur;
+
+}
 
 void reverseList(node **l){
     node *cur= *l, *tmp;
