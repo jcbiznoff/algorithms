@@ -1,0 +1,61 @@
+//Version1.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+enum VisitNode {Visted, NotVisited};
+
+typedef int ElementType;
+
+typedef struct _Vertex{
+	ElementType data;
+	int visited;
+	int idx;
+
+	struct _Vertex *next;
+	struct _Edge *AdjList;
+}Vertex;
+
+typedef struct _Edge {
+	int weight;
+	struct _Edge *next;
+	Vertex *from;
+	Vertex *target;
+}Edge;
+
+typedef struct _Graph{
+	Vertex* vNode;
+	int vcount;
+} Graph;
+
+Graph* createGraph();
+void destroyGraph(Grph *);
+
+Vertex* createVertex(ElementType);
+void destroyVertex(Vertex *);
+
+Edge* createEdge(Vertex*, Vertex*,int);
+void destroyEdge(Edge*);
+
+void addVertex(Graph*, Vertex*);
+void addEdge(Vertex*,Edge*);
+void printGraph(Graph*);
+
+
+
+//Version2. 
+typedef struct AdjList_{
+	void *vertex;
+	Set adjacent;
+}AdjList;
+
+typedef struct Graph_{
+	int vcount,ecount;
+	int (*match)(const void *key1, const void *key2);
+	void (*destroy)(void* data);
+
+	List adjlists;
+}Graph;
+
+
+

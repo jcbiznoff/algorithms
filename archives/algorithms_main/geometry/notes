@@ -1,0 +1,25 @@
+covered by stanford cs97si class
+
+cross product
+ds: points(x,y)
+
+segment-seg:ment intersection test
+ds: point or line?
+
+convex hull problem => graham scan
+ds: set of points
+
+sweep line algorithm => find union of squares
+ds: set of rects
+
+intersecting half planes
+
+binary search
+
+ternary search
+
+
+//geeks for geeks
+closest pair of points
+
+check if a given point lies inside a triangle
